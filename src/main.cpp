@@ -1,17 +1,17 @@
-#include <fcntl.h>
-#include <sys/mman.h>  // ::mmap, ::munmap
-#include <unistd.h>    // ::lseek
-
-#include <cerrno>
-#include <cstring>  // std::strerror
-#include <filesystem>
-#include <fstream>
-#include <print>
-
 #include "fmt.hpp"
 #include "messages.hpp"
+#include <fcntl.h>
+#include <filesystem>
+#include <print>
+#include <sys/mman.h> // ::mmap, ::munmap
+#include <unistd.h>   // ::lseek
+#include <cerrno>
+#include <cstring> // std::strerror
+#include <fstream>
 
-int main(int argc, char* argv[]) {
+int
+main(int argc, char* argv[])
+{
     if (argc != 2) {
         return 1;
     }
@@ -21,8 +21,7 @@ int main(int argc, char* argv[]) {
 
     int fd = ::open(input_file.c_str(), O_RDONLY);
     if (fd == -1) {
-        std::println(stderr, "ERROR: open ({}): {}", input_file.string(),
-                     std::strerror(errno));
+        std::println(stderr, "ERROR: open ({}): {}", input_file.string(), std::strerror(errno));
         return 1;
     } else {
         std::println("successfully opened file");
@@ -49,19 +48,21 @@ int main(int argc, char* argv[]) {
     std::println("mmapped file");
 
     auto ptr = reinterpret_cast<std::uint8_t*>(f_ptr);
-    // std::uint8_t* end = ptr + file_size;
-    std::uint8_t* end = ptr + 10;
+    std::uint8_t* end = ptr + file_size;
 
-    auto tmp_ptr = ptr;
-    while (tmp_ptr < end) {
-        std::print("{:02x} ", *tmp_ptr);
-        ++tmp_ptr;
+    std::uint64_t nmsgs = 0;
+    while (ptr < end) {
+        auto hdr = reinterpret_cast<itch::header*>(ptr);
+
+        if (hdr->msg_type == 'S') {
+            std::println("{}", *reinterpret_cast<itch::system_event*>(ptr));
+        } else {
+            std::println("{}", *hdr);
+        }
+        ptr += std::byteswap(hdr->length) + sizeof(hdr->length);
+        ++nmsgs;
     }
-    std::println();
 
-    itch::header* const hdr = reinterpret_cast<itch::header*>(ptr);
-    std::println("{}", *hdr);
-    std::string formatted = std::format("{}", *hdr);
-    // int rv = ::mmap
+    std::println("total messages: {}", nmsgs);
     return 0;
 }
