@@ -1,5 +1,6 @@
 #include "fmt.hpp"
 #include "messages.hpp"
+#include "order_book_manager.hpp"
 #include <fcntl.h>
 #include <filesystem>
 #include <print>
@@ -46,6 +47,7 @@ main(int argc, char* argv[])
     }
 
     std::println("mmapped file");
+    order_book_manager obm;
 
     auto ptr = reinterpret_cast<std::uint8_t*>(f_ptr);
     std::uint8_t* end = ptr + file_size;
