@@ -47,6 +47,7 @@ main(int argc, char* argv[])
     }
 
     std::println("mmapped file");
+
     order_book_manager obm;
 
     auto ptr = reinterpret_cast<std::uint8_t*>(f_ptr);
