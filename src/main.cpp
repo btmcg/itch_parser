@@ -54,10 +54,40 @@ main(int argc, char* argv[])
     while (ptr < end) {
         auto hdr = reinterpret_cast<itch::header*>(ptr);
 
-        if (hdr->msg_type == 'S') {
-            std::println("{}", *reinterpret_cast<itch::system_event*>(ptr));
-        } else {
-            std::println("{}", *hdr);
+        switch (hdr->msg_type) {
+            case 'A':
+                std::println("{}", *reinterpret_cast<itch::add_order*>(ptr));
+                break;
+            case 'C':
+                std::println("{}", *reinterpret_cast<itch::order_executed_with_price*>(ptr));
+                break;
+            case 'D':
+                std::println("{}", *reinterpret_cast<itch::order_delete*>(ptr));
+                break;
+            case 'E':
+                std::println("{}", *reinterpret_cast<itch::order_executed*>(ptr));
+                break;
+            case 'F':
+                std::println("{}", *reinterpret_cast<itch::add_order_with_mpid*>(ptr));
+                break;
+            case 'P':
+                std::println("{}", *reinterpret_cast<itch::trade_non_cross*>(ptr));
+                break;
+            case 'Q':
+                std::println("{}", *reinterpret_cast<itch::trade_cross*>(ptr));
+                break;
+            case 'S':
+                std::println("{}", *reinterpret_cast<itch::system_event*>(ptr));
+                break;
+            case 'U':
+                std::println("{}", *reinterpret_cast<itch::order_replace*>(ptr));
+                break;
+            case 'X':
+                std::println("{}", *reinterpret_cast<itch::order_cancel*>(ptr));
+                break;
+            default:
+                std::println("{}", *hdr);
+                break;
         }
         ptr += std::byteswap(hdr->length) + sizeof(hdr->length);
         ++nmsgs;
