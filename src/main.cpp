@@ -49,6 +49,7 @@ main(int argc, char* argv[])
     std::println("mmapped file");
 
     order_book_manager obm;
+    std::unordered_map<std::uint64_t, order_book&> order_map_;
 
     auto ptr = reinterpret_cast<std::uint8_t*>(f_ptr);
     std::uint8_t* end = ptr + file_size;
@@ -58,21 +59,37 @@ main(int argc, char* argv[])
         auto hdr = reinterpret_cast<itch::header*>(ptr);
 
         switch (hdr->msg_type) {
-            case 'A':
-                std::println("{}", *reinterpret_cast<itch::add_order*>(ptr));
-                break;
+            case 'A': {
+                auto m = *reinterpret_cast<itch::add_order*>(ptr);
+                std::println("{}", m);
+                auto book = obm.get_order_book(std::string(m.stock));
+                book.add_order(order(m));
+                order_map_.insert({m.order_reference_number, book});
+            } break;
             case 'C':
                 std::println("{}", *reinterpret_cast<itch::order_executed_with_price*>(ptr));
                 break;
-            case 'D':
-                std::println("{}", *reinterpret_cast<itch::order_delete*>(ptr));
-                break;
+            case 'D': {
+                auto m = *reinterpret_cast<itch::order_delete*>(ptr);
+                std::println("{}", m);
+                auto b_itr = order_map_.find(m.order_reference_number);
+                if (b_itr == order_map_.end()) {
+                    std::println(stderr, "[main] failed to find order in book");
+                    std::abort();
+                }
+                b_itr->second.delete_order(m);
+                order_map_.erase(m.order_reference_number);
+            } break;
             case 'E':
                 std::println("{}", *reinterpret_cast<itch::order_executed*>(ptr));
                 break;
-            case 'F':
-                std::println("{}", *reinterpret_cast<itch::add_order_with_mpid*>(ptr));
-                break;
+            case 'F': {
+                auto m = *reinterpret_cast<itch::add_order_with_mpid*>(ptr);
+                std::println("{}", m);
+                auto book = obm.get_order_book(std::string(m.stock));
+                book.add_order(order(m));
+                order_map_.insert({m.order_reference_number, book});
+            } break;
             case 'P':
                 std::println("{}", *reinterpret_cast<itch::trade_non_cross*>(ptr));
                 break;
