@@ -10,8 +10,8 @@ inc_dir = include_directories('src')
 src_files = files(
   # Add your source files here, for example:
   'src/main.cpp',
-  # 'src/parser.cpp',
-  # 'src/utils.cpp'
+  'src/order_book.cpp',
+  'src/price_level.cpp',
 )
 
 # You can also use a glob pattern to automatically find all cpp files
