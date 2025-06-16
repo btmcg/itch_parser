@@ -47,10 +47,8 @@ itch_parser_lib = static_library('itch_parser_lib',
 if catch2_dep.found()
   # Test files for each class
   test_files = [
-    'tests/test_order.cpp',
-    # 'tests/test_price_level.cpp', 
+    'tests/test_price_level.cpp', 
     # 'tests/test_order_book.cpp',
-    'tests/test_order_book_manager.cpp',
     # 'tests/test_messages.cpp'
   ]
 

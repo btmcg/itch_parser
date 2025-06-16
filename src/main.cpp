@@ -1,6 +1,5 @@
 #include "fmt.hpp"
 #include "messages.hpp"
-#include "order_book_manager.hpp"
 #include "order_handler.hpp"
 #include <fcntl.h>
 #include <filesystem>

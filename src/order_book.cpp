@@ -14,11 +14,13 @@ order_book::add_order(order const& o)
     if (o.is_buy) {
         auto pl_itr = bid_levels_.find(o.price);
         if (pl_itr == bid_levels_.end()) {
-            price_level pl(o.price);
-            auto o_itr = pl.add_order(o);
-            bid_levels_.insert({o.price, pl});
+            price_level price_lvl(o.price);
+            auto o_itr = price_lvl.add_order(o);
+            auto itr = bid_levels_.insert({o.price, price_lvl});
+            price_level& pl = itr.first->second;
+
             order_map_.insert({o.order_id, std::make_pair(&pl, o_itr)});
-            std::println("[order_book::add_order] 0 inserted {}", *o_itr);
+            std::println("[order_book::add_order] 0 inserted oid={}, {}", o_itr->order_id, *o_itr);
         } else {
             price_level& pl = pl_itr->second;
             auto o_itr = pl.add_order(o);
@@ -28,11 +30,13 @@ order_book::add_order(order const& o)
     } else {
         auto pl_itr = ask_levels_.find(o.price);
         if (pl_itr == ask_levels_.end()) {
-            price_level pl(o.price);
-            auto o_itr = pl.add_order(o);
-            ask_levels_.insert({o.price, pl});
+            price_level price_lvl(o.price);
+            auto o_itr = price_lvl.add_order(o);
+            auto itr = ask_levels_.insert({o.price, price_lvl});
+            price_level& pl = itr.first->second;
+
             order_map_.insert({o.order_id, std::make_pair(&pl, o_itr)});
-            std::println("[order_book::add_order] 2 inserted {}", *o_itr);
+            std::println("[order_book::add_order] 2 inserted oid={}, {}", o_itr->order_id, *o_itr);
         } else {
             price_level& pl = pl_itr->second;
             auto o_itr = pl.add_order(o);
@@ -41,14 +45,19 @@ order_book::add_order(order const& o)
         }
     }
 
+    for (auto& [oid, itr] : order_map_) {
+        std::println("[order_book::add_order] oid={}, oid={}", oid, (*itr.second).order_id);
+    }
+
+
     std::println("[order_book::add_order] order_map {:p} size {}", static_cast<void*>(&order_map_),
             order_map_.size());
 
-    if (symbol_ == "VXXB") {
-        for (auto& [oid, itr] : order_map_) {
-            std::println("[order_book::add_order] oid={}, oid={}", oid, (*itr.second).order_id);
-        }
-    }
+    // if (symbol_ == "VXXB") {
+    //     for (auto& [oid, itr] : order_map_) {
+    //         std::println("[order_book::add_order] oid={}, oid={}", oid, (*itr.second).order_id);
+    //     }
+    // }
 }
 
 void
