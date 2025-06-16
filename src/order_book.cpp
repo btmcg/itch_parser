@@ -15,9 +15,9 @@ order_book::add_order(order const& o)
         auto pl_itr = bid_levels_.find(o.price);
         if (pl_itr == bid_levels_.end()) {
             price_level price_lvl(o.price);
-            auto o_itr = price_lvl.add_order(o);
             auto itr = bid_levels_.insert({o.price, price_lvl});
             price_level& pl = itr.first->second;
+            auto o_itr = pl.add_order(o);
 
             order_map_.insert({o.order_id, std::make_pair(&pl, o_itr)});
             std::println("[order_book::add_order] 0 inserted oid={}, {}", o_itr->order_id, *o_itr);
@@ -31,15 +31,16 @@ order_book::add_order(order const& o)
         auto pl_itr = ask_levels_.find(o.price);
         if (pl_itr == ask_levels_.end()) {
             price_level price_lvl(o.price);
-            auto o_itr = price_lvl.add_order(o);
             auto itr = ask_levels_.insert({o.price, price_lvl});
             price_level& pl = itr.first->second;
+            auto o_itr = pl.add_order(o);
 
             order_map_.insert({o.order_id, std::make_pair(&pl, o_itr)});
             std::println("[order_book::add_order] 2 inserted oid={}, {}", o_itr->order_id, *o_itr);
         } else {
             price_level& pl = pl_itr->second;
             auto o_itr = pl.add_order(o);
+
             order_map_.insert({o.order_id, std::make_pair(&pl, o_itr)});
             std::println("[order_book::add_order] 3 inserted {}", *o_itr);
         }
