@@ -9,25 +9,6 @@
 struct order
 {
     order() = default;
-    order(itch::add_order const& o)
-            : timestamp(from_itch_timestamp(o.timestamp))
-            , order_id(std::byteswap(o.order_reference_number))
-            , is_buy((o.buy_sell_indicator == 'B' ? true : false))
-            , qty(std::byteswap(o.shares))
-            , price(std::byteswap(o.price))
-    {
-        // empty
-    }
-
-    order(itch::add_order_with_mpid const& o)
-            : timestamp(from_itch_timestamp(o.timestamp))
-            , order_id(std::byteswap(o.order_reference_number))
-            , is_buy((o.buy_sell_indicator == 'B' ? true : false))
-            , qty(std::byteswap(o.shares))
-            , price(std::byteswap(o.price))
-    {
-        // empty
-    }
 
     std::uint64_t timestamp;
     std::uint64_t order_id;

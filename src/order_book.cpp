@@ -43,6 +43,12 @@ order_book::add_order(order const& o)
 
     std::println("[order_book::add_order] order_map {:p} size {}", static_cast<void*>(&order_map_),
             order_map_.size());
+
+    if (symbol_ == "VXXB") {
+        for (auto& [oid, itr] : order_map_) {
+            std::println("[order_book::add_order] oid={}, oid={}", oid, (*itr.second).order_id);
+        }
+    }
 }
 
 void
@@ -72,7 +78,7 @@ order_book::delete_order(std::uint64_t oid)
 {
     if (oid == 952) {
         for (auto& [oid, itr] : order_map_) {
-            std::println("[order_book::delete_order] oid={}, {}", oid, *itr.second);
+            std::println("[order_book::delete_order] oid={}, oid={}", oid, (*itr.second).order_id);
         }
     }
 
