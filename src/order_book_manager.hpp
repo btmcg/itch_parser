@@ -26,19 +26,6 @@ public:
         return ob;
     }
 
-    order_book&
-    get_order_book(std::uint64_t oid)
-    {
-        auto itr = order_mapping_.find(oid);
-        if (itr == order_mapping_.end()) {
-            std::println("[order_book_manager::get_order_book] failed to find oid {}", oid);
-            std::abort();
-        }
-        return (*itr->second);
-    }
-
-
 private:
     std::unordered_map<std::string, order_book> books_;
-    std::unordered_map<std::uint64_t, order_book*> order_mapping_;
 };

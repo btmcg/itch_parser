@@ -1,6 +1,7 @@
 #include "fmt.hpp"
 #include "messages.hpp"
 #include "order_book_manager.hpp"
+#include "order_handler.hpp"
 #include <fcntl.h>
 #include <filesystem>
 #include <print>
@@ -9,6 +10,14 @@
 #include <cerrno>
 #include <cstring> // std::strerror
 #include <fstream>
+
+inline void
+rtrim(std::string& s)
+{
+    s.erase(std::find_if(s.rbegin(), s.rend(), [](unsigned char ch) { return !std::isspace(ch); })
+                    .base(),
+            s.end());
+}
 
 int
 main(int argc, char* argv[])
@@ -48,8 +57,7 @@ main(int argc, char* argv[])
 
     std::println("mmapped file");
 
-    order_book_manager obm;
-    std::unordered_map<std::uint64_t, order_book&> order_map_;
+    order_handler handler;
 
     auto ptr = reinterpret_cast<std::uint8_t*>(f_ptr);
     std::uint8_t* end = ptr + file_size;
@@ -61,30 +69,20 @@ main(int argc, char* argv[])
         switch (hdr->msg_type) {
             case 'A': {
                 auto m = *reinterpret_cast<itch::add_order*>(ptr);
-                std::println("{}", m);
-                auto book = obm.get_order_book(std::string(m.stock));
-                auto oid = std::byteswap(m.order_reference_number);
-                book.add_order(order(m));
-                order_map_.insert({oid, book});
-                std::println("om insert {} for book {}", oid, book.symbol());
+                order o(m);
+                std::string symbol(m.stock);
+                rtrim(symbol);
+                std::println("[main] A: symbol={}, {}", symbol, o);
+                handler.add_order(symbol, o);
             } break;
             case 'C':
                 // std::println("{}", *reinterpret_cast<itch::order_executed_with_price*>(ptr));
                 break;
             case 'D': {
                 auto m = *reinterpret_cast<itch::order_delete*>(ptr);
-                std::println("{}", m);
-
                 auto oid = std::byteswap(m.order_reference_number);
-                auto b_itr = order_map_.find(oid);
-                if (b_itr == order_map_.end()) {
-                    std::println(stderr, "[main] failed to find order in book");
-                    std::abort();
-                }
-                order_book& book = b_itr->second;
-                std::println("[main] found book for {}->{}", oid, book.symbol());
-                book.delete_order(oid);
-                order_map_.erase(oid);
+                std::println("[main] D: oid={}", oid);
+                handler.delete_order(oid);
             } break;
             case 'E':
                 // std::println("{}", *reinterpret_cast<itch::order_executed*>(ptr));
@@ -117,13 +115,6 @@ main(int argc, char* argv[])
         }
         ptr += std::byteswap(hdr->length) + sizeof(hdr->length);
         ++nmsgs;
-
-        auto book_itr = order_map_.find(952);
-        if (book_itr == order_map_.end()) {
-            std::println("no 952");
-        } else {
-            std::println("952->{}", book_itr->second.symbol());
-        }
     }
 
     std::println("total messages: {}", nmsgs);

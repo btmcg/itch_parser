@@ -74,8 +74,7 @@ struct std::formatter<itch::header> : std::formatter<std::string>
                 std::format(
                         "header(length={},msg_type={},stock_locate={},tracking_number={},timestamp={})",
                         std::byteswap(m.length), m.msg_type, std::byteswap(m.stock_locate),
-                        std::byteswap(m.tracking_number),
-                        to_local_time(from_itch_timestamp(m.timestamp))),
+                        std::byteswap(m.tracking_number), "xx"),
                 ctx);
     }
 };
@@ -91,8 +90,7 @@ struct std::formatter<itch::system_event> : std::formatter<std::string>
                 std::format(
                         "system_event(length={},msg_type={},stock_locate={},tracking_number={},timestamp={},event_code={})",
                         std::byteswap(m.length), m.msg_type, std::byteswap(m.stock_locate),
-                        std::byteswap(m.tracking_number),
-                        to_local_time(from_itch_timestamp(m.timestamp)), m.event_code),
+                        std::byteswap(m.tracking_number), "xx", m.event_code),
                 ctx);
     }
 };
@@ -107,8 +105,7 @@ struct std::formatter<itch::add_order> : std::formatter<std::string>
                 std::format(
                         "add_order(length={},msg_type={},stock_locate={},tracking_number={},timestamp={},order_reference_number={},buy_sell_indicator={},shares={},stock={},price={})",
                         std::byteswap(m.length), m.msg_type, std::byteswap(m.stock_locate),
-                        std::byteswap(m.tracking_number),
-                        to_local_time(from_itch_timestamp(m.timestamp)),
+                        std::byteswap(m.tracking_number), "xx",
                         std::byteswap(m.order_reference_number), m.buy_sell_indicator,
                         std::byteswap(m.shares), m.stock, std::byteswap(m.price)),
                 ctx);
@@ -125,8 +122,7 @@ struct std::formatter<itch::add_order_with_mpid> : std::formatter<std::string>
                 std::format(
                         "add_order_with_mpid(length={},msg_type={},stock_locate={},tracking_number={},timestamp={},order_reference_number={},buy_sell_indicator={},shares={},stock={:<8},price={},attribution={:<4})",
                         std::byteswap(m.length), m.msg_type, std::byteswap(m.stock_locate),
-                        std::byteswap(m.tracking_number),
-                        to_local_time(from_itch_timestamp(m.timestamp)),
+                        std::byteswap(m.tracking_number), "xx",
                         std::byteswap(m.order_reference_number), m.buy_sell_indicator,
                         std::byteswap(m.shares), m.stock, std::byteswap(m.price), m.attribution),
                 ctx);
@@ -143,8 +139,7 @@ struct std::formatter<itch::order_executed> : std::formatter<std::string>
                 std::format(
                         "order_executed(length={},msg_type={},stock_locate={},tracking_number={},timestamp={},order_reference_number={},executed_shares={},match_number={})",
                         std::byteswap(m.length), m.msg_type, std::byteswap(m.stock_locate),
-                        std::byteswap(m.tracking_number),
-                        to_local_time(from_itch_timestamp(m.timestamp)),
+                        std::byteswap(m.tracking_number), "xx",
                         std::byteswap(m.order_reference_number), std::byteswap(m.executed_shares),
                         std::byteswap(m.match_number)),
                 ctx);
@@ -161,8 +156,7 @@ struct std::formatter<itch::order_executed_with_price> : std::formatter<std::str
                 std::format(
                         "order_executed_with_price(length={},msg_type={},stock_locate={},tracking_number={},timestamp={},order_reference_number={},executed_shares={},match_number={},printable={},execution_price={})",
                         std::byteswap(m.length), m.msg_type, std::byteswap(m.stock_locate),
-                        std::byteswap(m.tracking_number),
-                        to_local_time(from_itch_timestamp(m.timestamp)),
+                        std::byteswap(m.tracking_number), "xx",
                         std::byteswap(m.order_reference_number), std::byteswap(m.executed_shares),
                         std::byteswap(m.match_number), m.printable,
                         std::byteswap(m.execution_price)),
@@ -180,8 +174,7 @@ struct std::formatter<itch::order_cancel> : std::formatter<std::string>
                 std::format(
                         "order_cancel(length={},msg_type={},stock_locate={},tracking_number={},timestamp={},order_reference_number={},cancelled_shares={})",
                         std::byteswap(m.length), m.msg_type, std::byteswap(m.stock_locate),
-                        std::byteswap(m.tracking_number),
-                        to_local_time(from_itch_timestamp(m.timestamp)),
+                        std::byteswap(m.tracking_number), "xx",
                         std::byteswap(m.order_reference_number), std::byteswap(m.cancelled_shares)),
                 ctx);
     }
@@ -197,8 +190,7 @@ struct std::formatter<itch::order_delete> : std::formatter<std::string>
                 std::format(
                         "order_delete(length={},msg_type={},stock_locate={},tracking_number={},timestamp={},order_reference_number={})",
                         std::byteswap(m.length), m.msg_type, std::byteswap(m.stock_locate),
-                        std::byteswap(m.tracking_number),
-                        to_local_time(from_itch_timestamp(m.timestamp)),
+                        std::byteswap(m.tracking_number), "xx",
                         std::byteswap(m.order_reference_number)),
                 ctx);
     }
@@ -214,8 +206,7 @@ struct std::formatter<itch::order_replace> : std::formatter<std::string>
                 std::format(
                         "order_replace(length={},msg_type={},stock_locate={},tracking_number={},timestamp={},original_order_reference_number={},new_order_reference_number={},shares={},price={})",
                         std::byteswap(m.length), m.msg_type, std::byteswap(m.stock_locate),
-                        std::byteswap(m.tracking_number),
-                        to_local_time(from_itch_timestamp(m.timestamp)),
+                        std::byteswap(m.tracking_number), "xx",
                         std::byteswap(m.original_order_reference_number),
                         std::byteswap(m.new_order_reference_number), std::byteswap(m.shares),
                         std::byteswap(m.price)),
@@ -233,8 +224,7 @@ struct std::formatter<itch::trade_non_cross> : std::formatter<std::string>
                 std::format(
                         "trade_non_cross(length={},msg_type={},stock_locate={},tracking_number={},timestamp={},order_reference_number={},buy_sell_indicator={},shares={},stock={:<8},price={},match_number={})",
                         std::byteswap(m.length), m.msg_type, std::byteswap(m.stock_locate),
-                        std::byteswap(m.tracking_number),
-                        to_local_time(from_itch_timestamp(m.timestamp)),
+                        std::byteswap(m.tracking_number), "xx",
                         std::byteswap(m.order_reference_number), m.buy_sell_indicator,
                         std::byteswap(m.shares), m.stock, std::byteswap(m.price),
                         std::byteswap(m.match_number)),
@@ -252,10 +242,8 @@ struct std::formatter<itch::trade_cross> : std::formatter<std::string>
                 std::format(
                         "trade_cross(length={},msg_type={},stock_locate={},tracking_number={},timestamp={},shares={},stock={:<8},cross_price={},match_number={},cross_type={})",
                         std::byteswap(m.length), m.msg_type, std::byteswap(m.stock_locate),
-                        std::byteswap(m.tracking_number),
-                        to_local_time(from_itch_timestamp(m.timestamp)), std::byteswap(m.shares),
-                        m.stock, std::byteswap(m.cross_price), std::byteswap(m.match_number),
-                        m.cross_type),
+                        std::byteswap(m.tracking_number), "xx", std::byteswap(m.shares), m.stock,
+                        std::byteswap(m.cross_price), std::byteswap(m.match_number), m.cross_type),
                 ctx);
     }
 };

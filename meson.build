@@ -50,21 +50,21 @@ if catch2_dep.found()
     'tests/test_order.cpp',
     # 'tests/test_price_level.cpp', 
     # 'tests/test_order_book.cpp',
-    # 'tests/test_order_book_manager.cpp',
+    'tests/test_order_book_manager.cpp',
     # 'tests/test_messages.cpp'
   ]
 
   # Create test executables for each test file
   foreach test_file : test_files
     test_name = fs.stem(test_file)
-    
+
     test_exe = executable(test_name,
       sources : [test_file],
       include_directories : inc_dir,
       link_with : itch_parser_lib,
       dependencies : catch2_dep,
       build_by_default : false)
-    
+
     test(test_name, test_exe)
   endforeach
 
@@ -75,7 +75,7 @@ if catch2_dep.found()
     link_with : itch_parser_lib,
     dependencies : catch2_dep,
     build_by_default : false)
-  
+
   test('all_tests', all_test_exe)
 
 else

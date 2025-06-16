@@ -13,7 +13,7 @@ public:
     explicit order_book(std::string const&);
 
     void add_order(order const&);
-    void cancel_order(itch::order_cancel const& oc);
+    void cancel_order(order const&);
     void delete_order(std::uint64_t oid);
     std::string const&
     symbol() const noexcept
