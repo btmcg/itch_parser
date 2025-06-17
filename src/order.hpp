@@ -15,12 +15,23 @@ using price_t = std::uint32_t;
 struct order
 {
     order() = default;
+
     order(itch::add_order const& ao)
             : ts(-1)
             , oid(std::byteswap(ao.order_reference_number))
             , is_buy(ao.buy_sell_indicator == 'B')
             , qty(std::byteswap(ao.shares))
             , price(std::byteswap(ao.price))
+    {
+        // empty
+    }
+
+    order(timestamp_t t, order_id_t id, bool is_buy, qty_t q, price_t p)
+            : ts(t)
+            , oid(id)
+            , is_buy(is_buy)
+            , qty(q)
+            , price(p)
     {
         // empty
     }
