@@ -18,37 +18,35 @@ price_level::add_order(order const& o)
 }
 
 void
-price_level::cancel_order(order const& /*o*/)
+price_level::cancel_order(order const& o)
 {
-    // auto itr = std::find_if(orders_.begin(), orders_.end(),
-    //         [&o](order const& target) { return o.order_id == target.order_id; });
-    // if (itr == orders_.end()) {
-    //     std::println(stderr, "[price_level::cancel_order] failed to find {}", o);
-    //     std::abort();
-    // }
+    auto itr = std::find_if(orders_.begin(), orders_.end(),
+            [&o](order const& target) { return o.oid == target.oid; });
+    if (itr == orders_.end()) {
+        std::println(stderr, "[price_level::cancel_order] failed to find oid={}, {}", o.oid, o);
+        std::abort();
+    }
 
-    // if (o.qty > itr->qty) {
-    //     orders_.erase(itr);
-    //     total_qty_ -= itr->qty;
-    // } else {
-    //     itr->qty -= o.qty;
-    //     total_qty_ -= o.qty;
-    // }
+    if (o.qty > itr->qty) {
+        orders_.erase(itr);
+        total_qty_ -= itr->qty;
+    } else {
+        itr->qty -= o.qty;
+        total_qty_ -= o.qty;
+    }
 }
 
 void
-price_level::delete_order(order const& /*o*/)
+price_level::delete_order(order const& o)
 {
-    // auto itr = std::find_if(orders_.begin(), orders_.end(),
-    //         [&o](order const& target) { return o.order_id == target.order_id; });
-    // if (itr == orders_.end()) {
-    //     std::println("not found order");
-    //     std::println(stderr, "[price_level::delete_order] failed to find {}", o);
-    //     std::abort();
-    // }
-    // std::println("found order");
+    auto itr = std::find_if(orders_.begin(), orders_.end(),
+            [&o](order const& target) { return o.oid == target.oid; });
+    if (itr == orders_.end()) {
+        std::println(stderr, "[price_level::delete_order] failed to find oid={}, {}", o.oid, o);
+        std::abort();
+    }
 
-    // total_qty_ -= itr->qty;
-    // orders_.erase(itr);
-    // std::println("order deleted");
+    total_qty_ -= itr->qty;
+    orders_.erase(itr);
+    std::println("[price_level::delete_order] order deleted");
 }
