@@ -12,7 +12,6 @@ order_book::order_book(std::string const& sym)
 void
 order_book::add_order(order const& o)
 {
-    std::println("[order_book::add_order] adding {}", o);
     if (o.is_buy) {
         auto pl_itr = bid_levels_.find(o.price);
         if (pl_itr == bid_levels_.end()) {
@@ -20,15 +19,11 @@ order_book::add_order(order const& o)
             auto itr = bid_levels_.insert({o.price, price_lvl});
             price_level& pl = itr.first->second;
             auto o_itr = pl.add_order(o);
-
             order_map_.insert({o.oid, std::make_pair(&pl, o_itr)});
-            std::println("[order_book::add_order] 0 inserted oid={}, {}", o_itr->oid, *o_itr);
         } else {
             price_level& pl = pl_itr->second;
             auto o_itr = pl.add_order(o);
             order_map_.insert({o.oid, std::make_pair(&pl, o_itr)});
-
-            std::println("[order_book::add_order] 1 inserted {}", *o_itr);
         }
     } else {
         auto pl_itr = ask_levels_.find(o.price);
@@ -37,40 +32,22 @@ order_book::add_order(order const& o)
             auto itr = ask_levels_.insert({o.price, price_lvl});
             price_level& pl = itr.first->second;
             auto o_itr = pl.add_order(o);
-
             order_map_.insert({o.oid, std::make_pair(&pl, o_itr)});
-            std::println("[order_book::add_order] 2 inserted oid={}, {}", o_itr->oid, *o_itr);
         } else {
             price_level& pl = pl_itr->second;
             auto o_itr = pl.add_order(o);
-
             order_map_.insert({o.oid, std::make_pair(&pl, o_itr)});
-            std::println("[order_book::add_order] 3 inserted {}", *o_itr);
         }
     }
-
-    for (auto& [oid, itr] : order_map_) {
-        std::println("[order_book::add_order] oid={}, oid={}", oid, (*itr.second).oid);
-    }
-
-
-    std::println("[order_book::add_order] order_map {:p} size {}", static_cast<void*>(&order_map_),
-            order_map_.size());
-
-    // if (symbol_ == "VXXB") {
-    //     for (auto& [oid, itr] : order_map_) {
-    //         std::println("[order_book::add_order] oid={}, oid={}", oid, (*itr.second).oid);
-    //     }
-    // }
 }
 
 void
 order_book::cancel_order(order const& o)
 {
     std::println("[order_book::cancel_order] {}", o);
-    // auto om_itr = order_map_.find(std::byteswap(oc.order_reference_number));
+    // auto om_itr = order_map_.find(o.oid);
     // if (om_itr == order_map_.end()) {
-    //     std::println(stderr, "[order_book::cancel_order] failed to find {}", oc);
+    //     std::println(stderr, "[order_book::cancel_order] failed to find oid={} {}", o.oid, o);
     //     std::abort();
     // }
 
@@ -89,21 +66,12 @@ order_book::cancel_order(order const& o)
 void
 order_book::delete_order(std::uint64_t oid)
 {
-    if (oid == 952) {
-        for (auto& [oid, itr] : order_map_) {
-            std::println("[order_book::delete_order] oid={}, oid={}", oid, (*itr.second).oid);
-        }
-    }
-
-    std::println("[order_book::delete_order] deleting order {}", oid);
     auto om_itr = order_map_.find(oid);
     if (om_itr == order_map_.end()) {
         std::println("[order_book::delete_order] failed to find oid {}", oid);
-        std::println("[order_book::delete_order] om size={}", order_map_.size());
         std::abort();
     }
 
     auto [pl, ord_itr] = om_itr->second;
-    std::println("[order_book::delete_order] found {}", *ord_itr);
     pl->delete_order(*ord_itr);
 }

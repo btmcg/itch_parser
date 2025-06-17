@@ -17,12 +17,9 @@ public:
         order_book* book = nullptr;
         auto itr = books_.find(symbol);
         if (itr == books_.end()) {
-            std::println("[order_handler::add_order] book doesn't exist for symbol={}, creating it",
-                    symbol);
             auto itr = books_.insert({symbol, order_book(symbol)});
             book = &itr.first->second;
         } else {
-            std::println("[order_handler::add_order] book found for symbol={}", symbol);
             book = &itr->second;
         }
         order_mapping_.insert(std::make_pair(o.oid, book));
@@ -34,9 +31,8 @@ public:
     {
         auto b_itr = order_mapping_.find(oid);
         if (b_itr == order_mapping_.end()) {
-            std::println("[order_handler::delete_order] failed to find order {} in book for {}",
-                    oid, b_itr->second->symbol());
-            std::abort();
+            // std::println(stderr, "[order_handler::delete_order] failed to find oid {}", oid);
+            return;
         }
         order_book* book = b_itr->second;
         book->delete_order(oid);

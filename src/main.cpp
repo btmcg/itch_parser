@@ -87,11 +87,12 @@ main(int argc, char* argv[])
                 // std::println("{}", *reinterpret_cast<itch::order_executed*>(ptr));
                 break;
             case 'F': {
-                // auto m = *reinterpret_cast<itch::add_order_with_mpid*>(ptr);
-                // std::println("{}", m);
-                // auto book = obm.get_order_book(std::string(m.stock));
-                // book.add_order(order(m));
-                // order_map_.insert({std::byteswap(m.order_reference_number), book});
+                auto m = *reinterpret_cast<itch::add_order_with_mpid*>(ptr);
+                order o(m);
+                std::string symbol(m.stock);
+                rtrim(symbol);
+                std::println("[main] F: symbol={}, {}", symbol, o);
+                handler.add_order(symbol, o);
             } break;
             case 'P':
                 // std::println("{}", *reinterpret_cast<itch::trade_non_cross*>(ptr));

@@ -48,5 +48,4 @@ price_level::delete_order(order const& o)
 
     total_qty_ -= itr->qty;
     orders_.erase(itr);
-    std::println("[price_level::delete_order] order deleted");
 }
