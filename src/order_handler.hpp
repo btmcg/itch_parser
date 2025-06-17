@@ -25,17 +25,17 @@ public:
             std::println("[order_handler::add_order] book found for symbol={}", symbol);
             book = &itr->second;
         }
-        order_mapping_.insert(std::make_pair(o.order_id, book));
+        order_mapping_.insert(std::make_pair(o.oid, book));
         book->add_order(o);
     }
 
     void
-    delete_order(std::uint64_t oid)
+    delete_order(order_id_t oid)
     {
         auto b_itr = order_mapping_.find(oid);
         if (b_itr == order_mapping_.end()) {
-            std::println("[order_handler::delete_order] failed to find order {} in book for {}", oid,
-                    b_itr->second->symbol());
+            std::println("[order_handler::delete_order] failed to find order {} in book for {}",
+                    oid, b_itr->second->symbol());
             std::abort();
         }
         order_book* book = b_itr->second;
@@ -45,5 +45,5 @@ public:
 
 private:
     std::unordered_map<std::string, order_book> books_;
-    std::unordered_map<std::uint64_t, order_book*> order_mapping_;
+    std::unordered_map<order_id_t, order_book*> order_mapping_;
 };

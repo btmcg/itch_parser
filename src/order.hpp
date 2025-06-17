@@ -6,15 +6,30 @@
 #include <format>
 #include <cstdint>
 
+
+using order_id_t = std::uint64_t;
+using timestamp_t = std::uint64_t; ///< nsecs since epoch
+using qty_t = std::uint32_t;
+using price_t = std::uint32_t;
+
 struct order
 {
     order() = default;
+    order(itch::add_order const& ao)
+            : ts(-1)
+            , oid(std::byteswap(ao.order_reference_number))
+            , is_buy(ao.buy_sell_indicator == 'B')
+            , qty(std::byteswap(ao.shares))
+            , price(std::byteswap(ao.price))
+    {
+        // empty
+    }
 
-    std::uint64_t timestamp;
-    std::uint64_t order_id;
+    timestamp_t ts;
+    order_id_t oid;
     bool is_buy;
-    std::uint32_t qty;
-    std::uint32_t price;
+    qty_t qty;
+    price_t price;
 };
 
 template <>
@@ -24,8 +39,8 @@ struct std::formatter<order> : std::formatter<std::string>
     format(order const& o, std::format_context& ctx) const
     {
         return std::formatter<std::string>::format(
-                std::format("order(timestamp={},order_id={},is_buy={},qty={},price={})", "xx",
-                        o.order_id, o.is_buy, o.qty, o.price),
+                std::format("order(ts={},oid={},is_buy={},qty={},price={})", "xx", o.oid, o.is_buy,
+                        o.qty, o.price),
                 ctx);
     }
 };

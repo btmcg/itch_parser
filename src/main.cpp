@@ -68,11 +68,7 @@ main(int argc, char* argv[])
         switch (hdr->msg_type) {
             case 'A': {
                 auto m = *reinterpret_cast<itch::add_order*>(ptr);
-                order o;
-                o.order_id = std::byteswap(m.order_reference_number);
-                o.is_buy = m.buy_sell_indicator == 'B';
-                o.qty = std::byteswap(m.shares);
-                o.price = std::byteswap(m.price);
+                order o(m);
                 std::string symbol(m.stock);
                 rtrim(symbol);
                 std::println("[main] A: symbol={}, {}", symbol, o);

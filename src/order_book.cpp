@@ -5,7 +5,9 @@ order_book::order_book(std::string const& sym)
         , bid_levels_()
         , ask_levels_()
         , order_map_()
-{}
+{
+    // empty
+}
 
 void
 order_book::add_order(order const& o)
@@ -19,12 +21,13 @@ order_book::add_order(order const& o)
             price_level& pl = itr.first->second;
             auto o_itr = pl.add_order(o);
 
-            order_map_.insert({o.order_id, std::make_pair(&pl, o_itr)});
-            std::println("[order_book::add_order] 0 inserted oid={}, {}", o_itr->order_id, *o_itr);
+            order_map_.insert({o.oid, std::make_pair(&pl, o_itr)});
+            std::println("[order_book::add_order] 0 inserted oid={}, {}", o_itr->oid, *o_itr);
         } else {
             price_level& pl = pl_itr->second;
             auto o_itr = pl.add_order(o);
-            order_map_.insert({o.order_id, std::make_pair(&pl, o_itr)});
+            order_map_.insert({o.oid, std::make_pair(&pl, o_itr)});
+
             std::println("[order_book::add_order] 1 inserted {}", *o_itr);
         }
     } else {
@@ -35,19 +38,19 @@ order_book::add_order(order const& o)
             price_level& pl = itr.first->second;
             auto o_itr = pl.add_order(o);
 
-            order_map_.insert({o.order_id, std::make_pair(&pl, o_itr)});
-            std::println("[order_book::add_order] 2 inserted oid={}, {}", o_itr->order_id, *o_itr);
+            order_map_.insert({o.oid, std::make_pair(&pl, o_itr)});
+            std::println("[order_book::add_order] 2 inserted oid={}, {}", o_itr->oid, *o_itr);
         } else {
             price_level& pl = pl_itr->second;
             auto o_itr = pl.add_order(o);
 
-            order_map_.insert({o.order_id, std::make_pair(&pl, o_itr)});
+            order_map_.insert({o.oid, std::make_pair(&pl, o_itr)});
             std::println("[order_book::add_order] 3 inserted {}", *o_itr);
         }
     }
 
     for (auto& [oid, itr] : order_map_) {
-        std::println("[order_book::add_order] oid={}, oid={}", oid, (*itr.second).order_id);
+        std::println("[order_book::add_order] oid={}, oid={}", oid, (*itr.second).oid);
     }
 
 
@@ -56,7 +59,7 @@ order_book::add_order(order const& o)
 
     // if (symbol_ == "VXXB") {
     //     for (auto& [oid, itr] : order_map_) {
-    //         std::println("[order_book::add_order] oid={}, oid={}", oid, (*itr.second).order_id);
+    //         std::println("[order_book::add_order] oid={}, oid={}", oid, (*itr.second).oid);
     //     }
     // }
 }
@@ -88,7 +91,7 @@ order_book::delete_order(std::uint64_t oid)
 {
     if (oid == 952) {
         for (auto& [oid, itr] : order_map_) {
-            std::println("[order_book::delete_order] oid={}, oid={}", oid, (*itr.second).order_id);
+            std::println("[order_book::delete_order] oid={}, oid={}", oid, (*itr.second).oid);
         }
     }
 

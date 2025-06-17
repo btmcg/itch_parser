@@ -14,7 +14,8 @@ public:
 
     void add_order(order const&);
     void cancel_order(order const&);
-    void delete_order(std::uint64_t oid);
+    void delete_order(order_id_t oid);
+
     std::string const&
     symbol() const noexcept
     {
@@ -23,9 +24,8 @@ public:
 
 private:
     std::string symbol_;
-    std::map<std::uint64_t, price_level, std::greater<std::uint64_t>> bid_levels_;
-    std::map<std::uint64_t, price_level, std::less<std::uint64_t>> ask_levels_;
-    std::unordered_map<std::uint64_t, std::pair<price_level*, std::list<order>::iterator>>
-            order_map_;
+    std::map<price_t, price_level, std::greater<price_t>> bid_levels_;
+    std::map<price_t, price_level, std::less<price_t>> ask_levels_;
+    std::unordered_map<order_id_t, std::pair<price_level*, std::list<order>::iterator>> order_map_;
 };
 

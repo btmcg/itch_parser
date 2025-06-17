@@ -21,11 +21,12 @@ TEST_CASE("Construction")
         order_book& ob = obm.get_order_book("AAPL");
 
         order o;
-        o.timestamp = 12345;
-        o.order_id = 123;
+        o.ts = 12345;
+        o.oid = 123;
         o.is_buy = true;
         o.qty = 100;
         o.price = 1.23 * 10000;
         ob.add_order(o);
+        obm.
     }
 }
